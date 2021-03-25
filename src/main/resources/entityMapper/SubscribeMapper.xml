@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.SubscribeMapper">
+
+    <resultMap id="roomSubscribeMap" type="Subscribe">
+        <id property="sid" column="Mid"/>
+        <result property="time" column="time"/>
+        <result property="date" column="date"/>
+        <result property="aid" column="aid"/>
+        <result property="week" column="week"/>
+        <result property="startSession" column="startSession"/>
+        <result property="endSession" column="endSession"/>
+        <result property="Rid" column="Rid"/>
+        <result property="Cid" column="Cid"/>
+        <result property="academic" column="academic"/>
+        <result property="type" column="type"/>
+        <result property="flag" column="flag"/>
+
+        <association property="computerRoom" javaType="ComputerRoom">
+            <id column="Rid" property="Rid"/>
+            <result column="number" property="number"/>
+            <result column="campus" property="campus"/>
+            <result column="building" property="building"/>
+            <result column="roomnum" property="roomnum"/>
+            <result column="floor" property="floor"/>
+        </association>
+    </resultMap>
+
+    <select id="getRoomSubscribe" resultMap="roomSubscribeMap">
+        select * from computerroom c, subscribe s where c.Rid=s.Rid and c.campus=#{campus} and c.building=#{building} and c.floor=#{floor} and s.date=#{date} and s.flag="1";
+    </select>
+
+    <select id="findToday" resultType="com.entity.Subscribe" parameterType="java.sql.Date">
+        select * from subscribe where date = #{date};
+    </select>
+    <delete id="deleteOne" parameterType="com.entity.Subscribe">
+        delete from subscribe where date=#{date} and Rid=#{Rid} and startSession=#{startSession} and endSession=#{endSession};
+    </delete>
+
+    <resultMap id="RoomCourseSubscribeMap" type="Subscribe">
+        <id property="sid" column="Mid"/>
+        <result property="time" column="time"/>
+        <result property="date" column="date"/>
+        <!--<result property="aid" column="aid"/>-->
+        <result property="week" column="week"/>
+        <result property="startSession" column="startSession"/>
+        <result property="endSession" column="endSession"/>
+        <result property="Rid" column="Rid"/>
+        <result property="Cid" column="Cid"/>
+        <result property="academic" column="academic"/>
+        <result property="type" column="type"/>
+        <result property="flag" column="flag"/>
+        <collection property="computerRoom" ofType="com.entity.ComputerRoom">
+            <result column="Rid" property="Rid"/>
+            <result column="number" property="number"/>
+            <result column="campus" property="campus"/>
+            <result column="building" property="building"/>
+            <result column="roomnum" property="roomnum"/>
+            <result column="floor" property="floor"/>
+        </collection>
+        <collection property="course" ofType="com.entity.Course">
+            <result column="Cid" property="Cid"/>
+            <result column="cname" property="cname"/>
+            <result column="startWeek" property="startWeek"/>
+            <result column="endWeek" property="endWeek"/>
+            <result column="aid" property="aid"/>
+            <result column="startSession" property="startSession"/>
+            <result column="endSession" property="endSession"/>
+            <result column="flag" property="flag"/>
+            <collection property="account" ofType="com.entity.Account">
+                <result column="aid" property="aid"/>
+                <result column="password" property="password"/>
+                <result column="classes" property="classes"/>
+                <result column="aname" property="aname"/>
+                <result column="year" property="year"/>
+                <result column="tel" property="tel"/>
+                <result column="Email" property="Email"/>
+            </collection>
+        </collection>
+
+
+    </resultMap>
+
+    <select id="checkReservations" resultMap="RoomCourseSubscribeMap">
+        select * from ((subscribe s left join course c on s.Cid = c.Cid) left join computerroom co on s.Rid = co.Rid) left join account a on c.aid = a.aid
+        where s.flag ="1"
+    </select>
+
+<!--    <select id="checkReservations" resultMap="RoomCourseSubscribeMap">-->
+<!--        select * from subscribe s,course c,computerroom co,account a-->
+<!--        where s.flag ="1" and a.aid=c.aid and co.Rid=s.Rid and s.Cid=c.Cid;-->
+<!--    </select>-->
+
+    <update id="pass" parameterType="com.entity.Subscribe">
+        update subscribe set flag="0" where Cid=#{Cid} and Rid=#{Rid} and date=#{date} and startSession=#{startSession} and endSession=#{endSession}
+    </update>
+
+    <update id="fail" parameterType="com.entity.Subscribe">
+        update subscribe set flag="2" where Cid=#{Cid} and Rid=#{Rid} and date=#{date} and startSession=#{startSession} and endSession=#{endSession}
+    </update>
+</mapper>

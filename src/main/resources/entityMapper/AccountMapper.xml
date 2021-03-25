@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.AccountMapper">
+    <select id="login" resultType="com.entity.Account" parameterType="com.entity.Account">
+        select * from account where aid=#{aid} AND password =#{password};
+    </select>
+    <select id="findAllStudent" resultType="com.entity.Account">
+        select * from account where classes='S';
+    </select>
+    <select id="findAllTeacher" resultType="com.entity.Account">
+        select * from account where classes='T';
+    </select>
+    <select id="findAccount" resultType="com.entity.Account">
+        select * from account where aid=#{aid};
+    </select>
+    <select id="findAllUser" resultType="com.entity.Account">
+        select * from account;
+    </select>
+    <update id="updateAccount" parameterType="com.entity.Account">
+        update account set classes=#{classes} where aid=#{aid};
+    </update>
+    <insert id="ManualImport" parameterType="com.entity.Account">
+        insert into account(aid, password,name, tel, classes, aacademic) values(#{aid},#{password} #{aname}, #{tel} , #{classes}, #{aacademic});
+    </insert>
+</mapper>

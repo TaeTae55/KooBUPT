@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ComputerRoomMapper">
+    <insert id="addRoom" parameterType="com.entity.ComputerRoom">
+        insert into computerroom(Rid, number, campus, building , roomnum, floor) values(#{Rid}, #{number}, #{campus}, #{building}, #{roomnum}, #{floor});
+    </insert>
+    <select id="findRoomOne" parameterType="com.entity.ComputerRoom" resultType="com.entity.ComputerRoom">
+        select * from computerroom where Rid=#{Rid};
+    </select>
+    <select id="findAllRoom" resultType="com.entity.ComputerRoom">
+        select * from computerroom;
+    </select>
+    <select id="findRoomByFCB" parameterType="com.entity.ComputerRoom" resultType="com.entity.ComputerRoom">
+        select * from computerroom where floor=#{floor} and campus=#{campus} and building=#{building};
+    </select>
+    <delete id="deleteRoomOne" parameterType="com.entity.ComputerRoom">
+        delete from computerroom where Rid=#{Rid};
+    </delete>
+</mapper>
